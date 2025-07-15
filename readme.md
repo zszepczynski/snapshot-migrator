@@ -4,8 +4,9 @@
 
 - DisableDatabaseEncryptionOnBackup must be enabled on account
 - Grab tokens from https://apptio-sso.awsapps.com/start/#/?tab=accounts -> Access keys
-- 
 
+
+Update config.env:
 ```
 SOURCE_ACCESS_KEY_ID=
 SOURCE_ACCESS_KEY=
