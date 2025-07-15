@@ -71,10 +71,7 @@ const moveTpDb = async ()=>{
   await targetS3.send(new PutObjectCommand({
     Bucket: targetBucket,
     Key: targetTpDbLocation,
-    Body: data,
-    Metadata:{
-      "disabledencryptionkey": "true"
-    }
+    Body: data
   }));
 
   console.log("Done tp_db");
