@@ -14,8 +14,8 @@ const sourceSessionToken = process.env.SOURCE_ACCESS_SESSION_TOKEN;
 const targetAccount = 'toxic2.tpondemand.com';
 const targetRegion = 'us-west-2';
 const targetBucket = 'apptio-tp-snapshots-stg';
-const targetSnapshotId = '88019cd6-1b0f-495d-8464-dc88864e45cf';
-const targetSnapshotName = 'test';
+const targetSnapshotId = 'a8562357-a335-40ae-9c57-f32fbe06806a';
+const targetSnapshotName = 'ttt';
 const targetAccessKeyId = process.env.TARGET_ACCESS_KEY_ID;
 const targetAccessKey = process.env.TARGET_ACCESS_KEY;
 const targetSessionToken = process.env.TARGET_ACCESS_SESSION_TOKEN;
@@ -71,7 +71,10 @@ const moveTpDb = async ()=>{
   await targetS3.send(new PutObjectCommand({
     Bucket: targetBucket,
     Key: targetTpDbLocation,
-    Body: data
+    Body: data,
+    Metadata:{
+      "disabledencryptionkey": "true"
+    }
   }));
 
   console.log("Done tp_db");
