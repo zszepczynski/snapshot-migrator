@@ -6,11 +6,11 @@ const {
   GetObjectCommand,
 } = require("@aws-sdk/client-s3");
 
-const sourceAccount = "apptiospmdemo.tpondemand.com";
+const sourceAccount = "romangunner.tpondemand.com";
 const sourceRegion = "eu-west-1";
 const sourceBucket = "apptio-tp-snapshots";
-const sourceSnapshotId = "6491e336-5ea7-447a-98e5-99dc6de8e617";
-const sourceSnapshotName = "arrow_fr_assignments";
+const sourceSnapshotId = "4e377b1d-e772-4b67-bf7e-549aaeeb275f";
+const sourceSnapshotName = "Funding Request Test Nonenc";
 const sourceAccessKeyId = process.env.SOURCE_ACCESS_KEY_ID;
 const sourceAccessKey = process.env.SOURCE_ACCESS_KEY;
 const sourceSessionToken = process.env.SOURCE_ACCESS_SESSION_TOKEN;
@@ -49,6 +49,9 @@ const sourceS3 = new S3Client({
   },
 });
 
+
+console.log(targetAccessKey,targetAccessKeyId,targetSessionToken, targets3ForcePathStyle)
+
 const targetS3 = new S3Client({
   region: targetRegion,
   credentials: {
@@ -76,7 +79,7 @@ const getTpDbBackupLocation = async (s3, bucket, metaFileLocation) => {
 const moveTpDb = async () => {
   const sourceMetaFileLocation = getMetaPartLocation(
     sourceAccount,
-    sourceSnapshotName,
+    sourceSnapshotName.toLowerCase(),
     sourceSnapshotId,
     "tp_db.bak"
   );
@@ -103,18 +106,14 @@ const moveTpDb = async () => {
     targetTpDbLocation = `${targetBucket}/${targetTpDbLocation}`;
   }
 
-  console.log(
-    `Uploading db file from ${sourceTpDbLocation}, ${sourceBucket} to ${targetTpDbLocation}, ${targetBucket}`
-  );
-
-  console.log("Downloading...");
+  console.log(`Downloading ${sourceTpDbLocation} ...`);
   const databaseFile = await sourceS3.send(
     new GetObjectCommand({ Bucket: sourceBucket, Key: sourceTpDbLocation })
   );
 
   const data = await databaseFile.Body.transformToByteArray(); // readable stream doesn't work, good enough for now
 
-  console.log("Uploading...");
+  console.log(`Uploading ${targetTpDbLocation}...`);
   await targetS3.send(
     new PutObjectCommand({
       Bucket: targetBucket,
@@ -126,13 +125,13 @@ const moveTpDb = async () => {
     })
   );
 
-  console.log("Done tp_db");
+  console.log("Done tp_db");  
 };
 
 const movePart = async (partName) => {
   const sourceMetaFilePath = getMetaPartLocation(
     sourceAccount,
-    sourceSnapshotName,
+    sourceSnapshotName.toLowerCase(),
     sourceSnapshotId,
     partName
   );
